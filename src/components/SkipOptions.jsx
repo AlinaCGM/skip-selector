@@ -19,6 +19,7 @@ const IMAGE_URL =
 export default function SkipOptions() {
   const [skips, setSkips] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [focusedId, setFocusedId] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
 
   useEffect(() => {
@@ -70,14 +71,15 @@ export default function SkipOptions() {
       <Grid container spacing={3}>
         {skips.map((skip) => {
           const totalPrice = getTotalPrice(skip);
+          const isFocused = focusedId === skip.id;
           const isSelected = selectedId === skip.id;
 
           return (
             <Grid item xs={12} sm={6} md={4} mx={"auto"} key={skip.id}>
               <Card
-                onClick={() => setSelectedId(skip.id)}
+                onClick={() => setFocusedId(skip.id)}
                 sx={{
-                  backgroundColor: "#1e1e1e",
+                  backgroundColor: isFocused ? "#111827" : "#1e1e1e",
                   color: "white",
                   border: isSelected ? "2px solid #0037C1" : "1px solid #333",
                   display: "flex",
@@ -85,15 +87,16 @@ export default function SkipOptions() {
                   height: "100%",
                   borderRadius: 2,
                   overflow: "hidden",
-                  transition: "transform 0.25s ease, box-shadow 0.25s ease",
-                  transform: isSelected ? "scale(1.02)" : "scale(1)",
+                  transition:
+                    "transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease",
+                  transform: "scale(1)",
                   boxShadow: isSelected
                     ? "0 0 10px #0037C1"
                     : "0px 2px 12px rgba(0,0,0,0.3)",
                   cursor: "pointer",
                   "&:hover": {
                     transform: "scale(1.02)",
-                    boxShadow: "0 4px 14px rgba(0, 55, 193, 0.3)",
+                    boxShadow: "0 4px 18px rgba(0, 55, 193, 0.25)",
                   },
                 }}
               >
@@ -157,7 +160,10 @@ export default function SkipOptions() {
                         textShadow: "0 0 6px rgba(0, 55, 193, 0.5)",
                       }}
                     >
-                      £ {totalPrice}
+                      <Box component="span" sx={{ color: "#1976d2" }}>
+                        £
+                      </Box>{" "}
+                      {totalPrice}
                     </Typography>
                   </Tooltip>
 
@@ -175,7 +181,10 @@ export default function SkipOptions() {
 
                 <Box sx={{ px: 2, pb: 2 }}>
                   <Button
-                    onClick={() => setSelectedId(skip.id)}
+                    onClick={(e) => {
+                      e.stopPropagation(); // prevent click bubbling
+                      setSelectedId(skip.id);
+                    }}
                     variant={isSelected ? "contained" : "outlined"}
                     fullWidth
                     sx={{
