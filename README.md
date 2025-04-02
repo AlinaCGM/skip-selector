@@ -70,7 +70,7 @@ This project is a redesigned version of the "Skip Selection" page from [WeWantWa
 
 ## Live Preview
 
-sandbox link , i didn't create yet
+https://codesandbox.io/p/github/AlinaCGM/skip-selector/master?import=true
 
 ---
 
